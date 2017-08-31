@@ -89,3 +89,18 @@ class MyAgentMiddleware(UserAgentMiddleware):
 
     def process_request(self, request, spider):
         request.headers['User-Agent'] = self.user_agent_list[random.randrange(0, self.user_agent_len)]
+
+
+class DoubanCookieChangeMiddleware(UserAgentMiddleware):
+    """
+    动态改变cookie来应对豆瓣的反爬虫
+    """
+
+    def process_request(self, request, spider):
+        cookie = request.headers.get('Cookie')
+        if cookie is not None:
+            cookie_list = cookie.split(';')
+            for index, c in enumerate(cookie_list):
+                if 'bid=' in c:
+                    cookie_list[index] = 'bid={}lyKNHhVQ'.format(random.randrange(0, 100))
+            request.headers['Cookie'] = ''.join(cookie_list)

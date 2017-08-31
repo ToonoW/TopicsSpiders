@@ -7,7 +7,7 @@
 
 import pymongo
 import logging
-from scrapy import Request
+from scrapy import Request, settings
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exceptions import DropItem
 
@@ -56,17 +56,18 @@ class MongoDBPipeline(object):
     """
     存储到MongoDB
     """
-    collection_name = 'news_items'
 
-    def __init__(self, mongo_uri, mongo_db):
+    def __init__(self, mongo_uri, mongo_db, mongo_collection):
         self.mongo_uri = mongo_uri
         self.mongo_db = mongo_db
+        self.mongo_collection = mongo_collection
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
             mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE')
+            mongo_db=crawler.settings.get('MONGO_DATABASE'),
+            mongo_collection=crawler.settings.get('MONGO_COLLECTION'),
         )
 
     def open_spider(self, spider):
@@ -77,8 +78,8 @@ class MongoDBPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        item['body'] = item['body'].extract()
-        self.db[self.collection_name].insert(dict(item))
+        item['body'] = item['body'].extract_first()
+        self.db[self.mongo_collection].insert(dict(item))
 
 
 class DuplicatesPipeline(MongoDBPipeline):
@@ -86,7 +87,7 @@ class DuplicatesPipeline(MongoDBPipeline):
     初步去重
     """
     def process_item(self, item, spider):
-        result = self.db[self.collection_name].find({'source_url': item['source_url']})
+        result = self.db[self.mongo_collection].find({'source_url': item['source_url']})
         if result.count() != 0:
             raise DropItem("Duplicate item found: %s" % item)
         else:

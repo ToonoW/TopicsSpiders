@@ -33,7 +33,7 @@ ROBOTSTXT_OBEY = False
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = False
+# COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -54,7 +54,8 @@ COOKIES_ENABLED = False
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    # 'TopicsSpiders.middlewares.MyCustomDownloaderMiddleware': 543,
-    'CRNewsSpiders.middlewares.MyAgentMiddleware': 544,
+    'TopicsSpiders.middlewares.MyAgentMiddleware': 544,
+    'TopicsSpiders.middlewares.DoubanCookieChangeMiddleware': 545,
 }
 
 # Enable or disable extensions
@@ -65,13 +66,13 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    # 'TopicsSpiders.pipelines.TopicsspidersPipeline': 300,
-#     'CRNewsSpiders.pipelines.DuplicatesPipeline': 300,
-#     'CRNewsSpiders.pipelines.CollectImageUrlPipeline': 301,
-#     'CRNewsSpiders.pipelines.ImagesDownloadPipeline': 302,
-#     'CRNewsSpiders.pipelines.MongoDBPipeline': 310,
-# }
+ITEM_PIPELINES = {
+   # 'TopicsSpiders.pipelines.TopicsspidersPipeline': 300,
+    'TopicsSpiders.pipelines.DuplicatesPipeline': 300,
+    'TopicsSpiders.pipelines.CollectImageUrlPipeline': 301,
+    'TopicsSpiders.pipelines.ImagesDownloadPipeline': 302,
+    'TopicsSpiders.pipelines.MongoDBPipeline': 310,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -98,6 +99,7 @@ DOWNLOADER_MIDDLEWARES = {
 # MongoDB Database Info
 MONGO_URI = 'mongodb://localhost'
 MONGO_DATABASE = 'topics'
+MONGO_COLLECTION = 'topic_items'
 
 # 图片存储
 IMAGES_STORE = './images'
