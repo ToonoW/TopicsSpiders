@@ -10,6 +10,7 @@ import logging
 from scrapy import Request, settings
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exceptions import DropItem
+from w3lib.html import remove_tags
 
 
 class TopicsspidersPipeline(object):
@@ -78,7 +79,7 @@ class MongoDBPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        item['body'] = item['body'].extract_first()
+        item['body'] = remove_tags(item['body'].extract_first(), which_ones=('span', ))
         self.db[self.mongo_collection].insert(dict(item))
 
 

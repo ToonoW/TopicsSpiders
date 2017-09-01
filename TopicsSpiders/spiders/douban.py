@@ -11,9 +11,9 @@ class DoubanSpider(CrawlSpider):
     allowed_domains = ['www.douban.com']
     start_urls = ['https://www.douban.com/group/explore']
 
-    custom_settings = {
-        'DOWNLOAD_DELAY': 0.5,
-    }
+#    custom_settings = {
+#        'DOWNLOAD_DELAY': 0.5,
+#    }
 
     def parse(self, response):
         items = response.xpath('//div[@class="article"]/div/div[@class="channel-item"]')
