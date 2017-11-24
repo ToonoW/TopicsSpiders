@@ -11,6 +11,8 @@
 
 BOT_NAME = 'TopicsSpiders'
 
+# LOG_LEVEL = 'WARNING'
+
 SPIDER_MODULES = ['TopicsSpiders.spiders']
 NEWSPIDER_MODULE = 'TopicsSpiders.spiders'
 
