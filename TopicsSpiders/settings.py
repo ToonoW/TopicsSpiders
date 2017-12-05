@@ -99,7 +99,7 @@ ITEM_PIPELINES = {
 
 
 # MongoDB Database Info
-MONGO_URI = 'mongodb://localhost'
+MONGO_URI = 'mongodb://120.24.63.55:37017'
 MONGO_DATABASE = 'topics'
 MONGO_COLLECTION = 'topic_items'
 
