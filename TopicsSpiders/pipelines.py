@@ -7,7 +7,8 @@
 
 import pymongo
 import logging
-from scrapy import Request, settings
+from bs4 import BeautifulSoup
+from scrapy import Request, settings, Selector
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exceptions import DropItem
 from w3lib.html import remove_tags
@@ -18,21 +19,21 @@ class TopicsspidersPipeline(object):
         return item
 
 
-
 class CollectImageUrlPipeline(object):
     """
     将body中的image URL取出存入image_urls待下载
     """
+
     def process_item(self, item, spider):
         body = item['body']
-        urls = body.xpath('.//img').xpath('@src').extract()
+        urls = Selector(text=body).xpath('.//img').xpath('@src').extract()
         for url in urls:
             if 'http' not in url:
                 if '//' in url:
                     index = urls.index(url)
                     urls[index] = 'http:' + url
                 else:
-                    logging.warning('图片URL不完整： {}', url)
+                    logging.warning('图片URL不完整： %s' % url)
                     urls.remove(url)
         item['image_urls'] = urls
         logging.info("图片数目: " + str(len(item['image_urls'])))
@@ -50,6 +51,15 @@ class ImagesDownloadPipeline(ImagesPipeline):
         if not image_paths:
             item['image_paths'] = []
         item['image_paths'] = image_paths
+        return item
+
+
+class ProcessThreeNinePipline(object):
+    # 去除39健康的新浪微博分享
+    def process_item(self, item, spider):
+        soup = BeautifulSoup(item['body'])
+        soup.find_all('p')[-1].extract()
+        item['body'] = str(soup)
         return item
 
 
@@ -74,12 +84,16 @@ class MongoDBPipeline(object):
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
+        logging.warn('创建mongodb连接')
 
     def close_spider(self, spider):
         self.client.close()
 
     def process_item(self, item, spider):
-        item['body'] = remove_tags(item['body'].extract_first(), which_ones=('span', ))
+        item['body'] = remove_tags(
+            item['body'], which_ones=('span', ))
+        if item['title'] == None or item['body'] == None:
+            DropItem('条目信息不全: %s' % item)
         self.db[self.mongo_collection].insert(dict(item))
 
 
@@ -87,8 +101,10 @@ class DuplicatesPipeline(MongoDBPipeline):
     """
     初步去重
     """
+
     def process_item(self, item, spider):
-        result = self.db[self.mongo_collection].find({'source_url': item['source_url']})
+        result = self.db[self.mongo_collection].find(
+            {'source_url': item['source_url']})
         if result.count() != 0:
             raise DropItem("Duplicate item found: %s" % item)
         else:

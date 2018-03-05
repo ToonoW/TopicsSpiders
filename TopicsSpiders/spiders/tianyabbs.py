@@ -38,7 +38,8 @@ class TianyabbsSpider(CrawlSpider):
         i = {}
         i['title'] = response.xpath(
             '//h1[@class="atl-title"]/span[@class="s_title"]/span/text()').extract_first()
-        i['body'] = response.xpath('//div[@class="bbs-content clearfix"]')
+        i['body'] = response.xpath(
+            '//div[@class="bbs-content clearfix"]').extract_first()
         i['tags'] = response.xpath(
             '//div[@class="atl-location clearfix"]/p[@class="crumbs"]/em/a/text()').extract()
         i['source'] = '天涯社区'
@@ -48,6 +49,6 @@ class TianyabbsSpider(CrawlSpider):
                 lambda x: '时间' in x, response.xpath('//div[@class="atl-menu clearfix js-bbs-act"]/div[@class="atl-info"]/span/text()').extract())))[0])
         except:
             i['datetime'] = 0
-            
+
         if None not in i.values() and i['body'] != []:
             return i

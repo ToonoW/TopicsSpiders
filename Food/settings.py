@@ -9,12 +9,12 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'TopicsSpiders'
+BOT_NAME = 'Food'
 
 LOG_LEVEL = 'WARNING'
 
-SPIDER_MODULES = ['TopicsSpiders.spiders']
-NEWSPIDER_MODULE = 'TopicsSpiders.spiders'
+SPIDER_MODULES = ['Food.spiders']
+NEWSPIDER_MODULE = 'Food.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -41,10 +41,19 @@ ROBOTSTXT_OBEY = False
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-# DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+DEFAULT_REQUEST_HEADERS = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'zh-Hans-CN, en-CN, en-us',
+    'User-Agent': 'FoodLibrary/2017121500',
+    'Phone-Model': 'iPhone',
+    'App-Key': 'food',
+    'App-Version': '2.7.5',
+    'App-Device': 'ios',
+    'Device_Id': 'ec259f2092b1464a8f54eeff633a5fd4',
+    'Os-Version': '11.2.1',
+    'Host': 'food.boohee.com',
+    'Content-Type': 'application/json; charset=utf-8',
+}
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
@@ -56,8 +65,8 @@ ROBOTSTXT_OBEY = False
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # 'TopicsSpiders.middlewares.MyCustomDownloaderMiddleware': 543,
-    'TopicsSpiders.middlewares.MyAgentMiddleware': 544,
-    'TopicsSpiders.middlewares.DoubanCookieChangeMiddleware': 545,
+    # 'TopicsSpiders.middlewares.MyAgentMiddleware': 544,
+    # 'TopicsSpiders.middlewares.DoubanCookieChangeMiddleware': 545,
 }
 
 # Enable or disable extensions
@@ -101,8 +110,8 @@ ITEM_PIPELINES = {
 # MongoDB Database Info
 MONGO_URI = 'mongodb://120.24.63.55:37017'    # 生产用
 MONGO_URI = 'mongodb://localhost:27017'         # 开发用
-MONGO_DATABASE = 'topics'
-MONGO_COLLECTION = 'topic_items'
+MONGO_DATABASE = 'food'
+MONGO_COLLECTION = 'food_items'
 
 # 图片存储
 IMAGES_STORE = './images'

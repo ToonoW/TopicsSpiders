@@ -1,0 +1,27 @@
+[[source]]
+
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+scrapy = "*"
+requests = "*"
+pymongo = "*"
+pillow = "*"
+"beautifulsoup4" = "*"
+scrapyd = "*"
+scrapyd-client = "*"
+
+
+[dev-packages]
+
+pylint = "*"
+"autopep8" = "*"
+
+
+[requires]
+
+python_version = "3.6"

@@ -49,7 +49,8 @@ class MopSpider(CrawlSpider):
         for key in info:
             item[key] = info[key]
         # 等待处理body中的图片链接
-        item['body'] = response.xpath('//div[@class="post-content"]')
+        item['body'] = response.xpath(
+            '//div[@class="post-content"]').extract_first()
         item['source'] = self.name
         item['source_url'] = response.url
 
